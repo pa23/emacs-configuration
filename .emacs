@@ -8,11 +8,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
-;; '(jabber-auto-reconnect t)
-;; '(jabber-history-enabled t)
-;; '(jabber-keepalive-interval 60)
-;; '(jabber-roster-default-group-name "google")
-;; '(jabber-show-resources nil)
  '(scroll-bar-mode (quote right))
  '(show-paren-mode t)
  '(tool-bar-mode nil)
@@ -100,5 +95,6 @@
 
 ;; закрытие всех буферов одной командой
 (defun kill-all-buffers ()
+  "Close all opened buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
