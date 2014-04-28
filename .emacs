@@ -20,27 +20,27 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
 
-;; каталог с дополнительными модулями
+;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
 
-;; отключить заставку
+;; disable startup message
 (setq inhibit-startup-message t)
 
-;; упрощенное подтверждение команд
+;; short command confirmation
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; подсвечивать текущую строку
+;; highlight current line
 (global-hl-line-mode 1)
 (set-face-background 'highlight "#E5E5FF")
 
-;; плавная прокрутка текста с помощью клавиш стрелок
+;; smooth text scrolling by arrow keys
 (setq scroll-conservatively 50)
 (setq scroll-preserve-screen-position 't)
 
-;; деактивация ускорения прокрутки мышью
+;; disable scrolling acceleration by using mouse wheel
 (setq mouse-wheel-progressive-speed nil)
 
-;; шаг прокрутки экрана мышью
+;; set scrolling step by using mouse wheel
 (defun scroll-up-1-lines ()
   "Scroll up 1 lines"
   (interactive)
@@ -52,34 +52,30 @@
 (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
 (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
 
-;; установить UTF-8 в качестве рабочей кодировки
+;; set UTF-8 as work encoding
 (set-language-environment 'UTF-8)
 
-;; автоопределение кодировки
-;; (требует установленной в системе enca, а также наличия auto-enca в */.site-lisp)
+;; file encoding autodetection (needs enca and auto-enca)
 (when (load "auto-enca" 'noerror)
   (modify-coding-system-alist 'file "" 'enca-detect-coding))
 
-;; режим переноса по умолчанию
+;; default line wrapping
 (global-visual-line-mode t)
 
-;; не использовать табы для отступов
+;; disable tabs
 (setq-default indent-tabs-mode nil)
 
-;; установить ширину табуляции в 4 символа
+;; set tab width to 4 symbols
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
 
-;; установить ширину отступа в 4 символа
-;;(setq-default standard-indent 4)
-
-;; установить стиль для исходных кодов на С и С++
+;; set style for C and C++ source codes
 (setq c-default-style '((java-mode . "java") (other . "stroustrup")))
 
-;; прокручивать буфер компиляции во время вывода
+;; scroll compilation log buffer
 (setq compilation-scroll-output 1)
 
-;; активация режима cmake
+;; activation cmake mode
 (setq auto-mode-alist
 	  (append
 	   '(("CMakeLists\\.txt\\'" . cmake-mode))
@@ -87,13 +83,12 @@
 	   auto-mode-alist))
 (autoload 'cmake-mode "cmake-mode.el" t)
 
-;; загрузка и настройка диалога переключения буферов
-;; (требует наличия popup.el и popup-switcher.el в */.site-lisp)
+;; load and setup popup switcher dialog (needs popup.el and popup-switcher.el)
 (require 'popup-switcher)
 (setq psw-in-window-center t)
 (global-set-key [f2] 'psw-switch-buffer)
 
-;; закрытие всех буферов одной командой
+;; close all opened buffers with a single command
 (defun kill-all-buffers ()
   "Close all opened buffers."
   (interactive)
