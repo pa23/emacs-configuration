@@ -18,7 +18,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
@@ -93,3 +93,16 @@
   "Close all opened buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
+
+;; change eol for current buffer
+(defun change-eol ()
+  "Change EOL for current buffer."
+  (interactive)
+  (setq es-current-eol (coding-system-eol-type buffer-file-coding-system))
+  (if (equal es-current-eol 2)
+      (setq es-new-eol 0)
+    (setq es-new-eol (+ es-current-eol 1)))
+  (setq es-new-coding (coding-system-change-eol-conversion buffer-file-coding-system es-new-eol))
+  (set-buffer-file-coding-system es-new-coding)
+  )
+(global-set-key [f12] 'change-eol)
