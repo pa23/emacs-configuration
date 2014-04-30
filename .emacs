@@ -40,6 +40,19 @@
 ;; disable scrolling acceleration by using mouse wheel
 (setq mouse-wheel-progressive-speed nil)
 
+;; set UTF-8 as work encoding
+(set-language-environment 'utf-8)
+
+;; disable tabs
+(setq-default indent-tabs-mode nil)
+
+;; set tab width to 4 symbols
+(setq-default tab-width 4)
+(setq-default c-basic-offset 4)
+
+;; disable line wrap
+(setq default-truncate-lines t)
+
 ;; set scrolling step by using mouse wheel
 (defun scroll-up-1-lines ()
   "Scroll up 1 lines"
@@ -51,23 +64,6 @@
   (scroll-down 1))
 (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
 (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
-
-;; set UTF-8 as work encoding
-(set-language-environment 'UTF-8)
-
-;; file encoding autodetection (needs enca and auto-enca)
-(when (load "auto-enca" 'noerror)
-  (modify-coding-system-alist 'file "" 'enca-detect-coding))
-
-;; default line wrapping
-(global-visual-line-mode t)
-
-;; disable tabs
-(setq-default indent-tabs-mode nil)
-
-;; set tab width to 4 symbols
-(setq-default tab-width 4)
-(setq-default c-basic-offset 4)
 
 ;; set style for C and C++ source codes
 (setq c-default-style '((java-mode . "java") (other . "stroustrup")))
@@ -94,15 +90,52 @@
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
+;; change coding for current buffer
+(setq my-working-codings '(utf-8 windows-1251 koi8-r cp866))
+(setq my-current-coding-index -1)
+(defun change-coding ()
+  "Change coding for current buffer."
+  (interactive)
+  (setq my-current-eol
+        (coding-system-eol-type buffer-file-coding-system))
+  (setq my-next-coding-index (+ my-current-coding-index 1))
+  (if (equal my-next-coding-index (safe-length my-working-codings))
+      (setq my-next-coding-index 0))
+  (setq my-new-coding-system
+        (prin1-to-string (nth my-next-coding-index my-working-codings)))
+  (if (equal my-current-eol 0)
+      (setq my-new-coding (concat my-new-coding-system "-unix"))
+    (if (equal my-current-eol 1)
+        (setq my-new-coding (concat my-new-coding-system "-dos"))
+      (setq my-new-coding (concat my-new-coding-system "-mac"))))
+  (setq my-current-coding-index my-next-coding-index)
+  (setq coding-system-for-read (read my-new-coding))
+  (revert-buffer t t)
+  (message "Set coding %s." my-new-coding)
+  )
+(global-set-key [f11] 'change-coding)
+
 ;; change eol for current buffer
 (defun change-eol ()
   "Change EOL for current buffer."
   (interactive)
-  (setq es-current-eol (coding-system-eol-type buffer-file-coding-system))
-  (if (equal es-current-eol 2)
-      (setq es-new-eol 0)
-    (setq es-new-eol (+ es-current-eol 1)))
-  (setq es-new-coding (coding-system-change-eol-conversion buffer-file-coding-system es-new-eol))
-  (set-buffer-file-coding-system es-new-coding)
+  (setq my-current-eol (coding-system-eol-type buffer-file-coding-system))
+  (if (equal my-current-eol 2)
+      (setq my-new-eol 0)
+    (setq my-new-eol (+ my-current-eol 1)))
+  (setq my-new-coding
+        (coding-system-change-eol-conversion
+         buffer-file-coding-system my-new-eol))
+  (set-buffer-file-coding-system my-new-coding)
   )
 (global-set-key [f12] 'change-eol)
+
+;; change line wrapping for current buffer
+(defun change-wrap ()
+  "Change line wrapping for current buffer."
+  (interactive)
+  (if (equal truncate-lines nil)
+      (setq truncate-lines t)
+    (setq truncate-lines nil))
+  )
+(global-set-key [f9] 'change-wrap)
