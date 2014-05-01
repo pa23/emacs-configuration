@@ -65,6 +65,11 @@
 (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
 (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
 
+;; change line wrapping for current buffer
+(setq default-truncate-lines t)
+(global-visual-line-mode 1)
+(global-set-key [f9] 'toggle-truncate-lines)
+
 ;; set style for C and C++ source codes
 (setq c-default-style '((java-mode . "java") (other . "stroustrup")))
 
@@ -129,13 +134,3 @@
   (set-buffer-file-coding-system my-new-coding)
   )
 (global-set-key [f12] 'change-eol)
-
-;; change line wrapping for current buffer
-(defun change-wrap ()
-  "Change line wrapping for current buffer."
-  (interactive)
-  (if (equal truncate-lines nil)
-      (setq truncate-lines t)
-    (setq truncate-lines nil))
-  )
-(global-set-key [f9] 'change-wrap)
