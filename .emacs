@@ -134,3 +134,10 @@
   (set-buffer-file-coding-system my-new-coding)
   )
 (global-set-key [f12] 'change-eol)
+
+;; marmalade repository
+;; ( update package list: M-x package-refresh-contents )
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
