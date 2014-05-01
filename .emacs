@@ -22,6 +22,7 @@
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
+(add-to-list 'load-path "~/.emacs.d/")
 
 ;; disable startup message
 (setq inhibit-startup-message t)
@@ -50,9 +51,6 @@
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
 
-;; disable line wrap
-(setq default-truncate-lines t)
-
 ;; set scrolling step by using mouse wheel
 (defun scroll-up-1-lines ()
   "Scroll up 1 lines"
@@ -77,14 +75,15 @@
 (setq compilation-scroll-output 1)
 
 ;; activation cmake mode
+(require 'cmake-mode)
 (setq auto-mode-alist
 	  (append
 	   '(("CMakeLists\\.txt\\'" . cmake-mode))
 	   '(("\\.cmake\\'" . cmake-mode))
 	   auto-mode-alist))
-(autoload 'cmake-mode "cmake-mode.el" t)
+(autoload 'cmake-mode "cmake-mode.elc" t)
 
-;; load and setup popup switcher dialog (needs popup.el and popup-switcher.el)
+;; setup popup switcher dialog
 (require 'popup-switcher)
 (setq psw-in-window-center t)
 (global-set-key [f2] 'psw-switch-buffer)
@@ -124,7 +123,8 @@
 (defun change-eol ()
   "Change EOL for current buffer."
   (interactive)
-  (setq my-current-eol (coding-system-eol-type buffer-file-coding-system))
+  (setq my-current-eol
+        (coding-system-eol-type buffer-file-coding-system))
   (if (equal my-current-eol 2)
       (setq my-new-eol 0)
     (setq my-new-eol (+ my-current-eol 1)))
@@ -135,9 +135,11 @@
   )
 (global-set-key [f12] 'change-eol)
 
-;; marmalade repository
+;; repositories
 ;; ( update package list: M-x package-refresh-contents )
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
