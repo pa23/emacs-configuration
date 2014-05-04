@@ -1,6 +1,6 @@
 ;; -*-Emacs-Lisp-*-
 
-;;    pa23's emacs configuration file    ;;
+;;;;  pa23's emacs configuration file
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -95,7 +95,7 @@
   (mapc 'kill-buffer (buffer-list)))
 
 ;; change coding for current buffer
-(setq my-working-codings '(utf-8 windows-1251 koi8-r cp866))
+(setq my-working-codings ["utf-8" "windows-1251" "koi8-r" "cp866"])
 (setq my-current-coding-index -1)
 (defun change-coding ()
   "Change coding for current buffer."
@@ -103,18 +103,18 @@
   (setq my-current-eol
         (coding-system-eol-type buffer-file-coding-system))
   (setq my-next-coding-index (+ my-current-coding-index 1))
-  (if (equal my-next-coding-index (safe-length my-working-codings))
+  (if (equal my-next-coding-index (length my-working-codings))
       (setq my-next-coding-index 0))
   (setq my-new-coding-system
-        (prin1-to-string (nth my-next-coding-index my-working-codings)))
+        (elt my-working-codings my-next-coding-index))
   (if (equal my-current-eol 0)
       (setq my-new-coding (concat my-new-coding-system "-unix"))
     (if (equal my-current-eol 1)
         (setq my-new-coding (concat my-new-coding-system "-dos"))
       (setq my-new-coding (concat my-new-coding-system "-mac"))))
-  (setq my-current-coding-index my-next-coding-index)
   (setq coding-system-for-read (read my-new-coding))
   (revert-buffer t t)
+  (setq my-current-coding-index my-next-coding-index)
   (message "Set coding %s." my-new-coding)
   )
 (global-set-key [f11] 'change-coding)
