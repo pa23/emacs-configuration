@@ -89,7 +89,7 @@
 (global-set-key [f2] 'psw-switch-buffer)
 
 ;; close all opened buffers with a single command
-(defun kill-all-buffers ()
+(defun pa23-kill-all-buffers ()
   "Close all opened buffers."
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
@@ -97,7 +97,7 @@
 ;; change coding for current buffer
 (setq my-working-codings ["utf-8" "windows-1251" "koi8-r" "cp866"])
 (setq my-current-coding-index -1)
-(defun change-coding ()
+(defun pa23-change-coding ()
   "Change coding for current buffer."
   (interactive)
   (setq my-current-eol
@@ -118,10 +118,10 @@
   (setq my-current-coding-index my-next-coding-index)
   (message "Set coding %s." my-new-coding)
   )
-(global-set-key [f11] 'change-coding)
+(global-set-key [f11] 'pa23-change-coding)
 
 ;; change eol for current buffer
-(defun change-eol ()
+(defun pa23-change-eol ()
   "Change EOL for current buffer."
   (interactive)
   (setq my-current-eol
@@ -134,7 +134,22 @@
          buffer-file-coding-system my-new-eol))
   (set-buffer-file-coding-system my-new-coding)
   )
-(global-set-key [f12] 'change-eol)
+(global-set-key [f12] 'pa23-change-eol)
+
+;; insert some text before each of the n lines
+(defun pa23-insert-before (text n)
+  "Insert some text before each of the n lines."
+  (interactive "sEnter text: \nnEnter number of inserts: ")
+  (let ((i 1) colpos)
+    (setq colpos (- (point) (line-beginning-position)))
+    (while (<= i n)
+      (insert text)
+      (forward-line)
+      (beginning-of-line)
+      (forward-char colpos)
+      (setq i (1+ i)))
+    )
+  )
 
 ;; repositories
 ;; ( update package list: M-x package-refresh-contents )
