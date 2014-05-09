@@ -100,23 +100,28 @@
 (defun pa23-change-coding ()
   "Change coding for current buffer."
   (interactive)
-  (setq my-current-eol
-        (coding-system-eol-type buffer-file-coding-system))
-  (setq my-next-coding-index (+ my-current-coding-index 1))
-  (if (equal my-next-coding-index (length my-working-codings))
-      (setq my-next-coding-index 0))
-  (setq my-new-coding-system
-        (elt my-working-codings my-next-coding-index))
-  (cond ((equal my-current-eol 0)
-         (setq my-new-coding (concat my-new-coding-system "-unix")))
-        ((equal my-current-eol 1)
-         (setq my-new-coding (concat my-new-coding-system "-dos")))
-        ((equal my-current-eol 2)
-         (setq my-new-coding (concat my-new-coding-system "-mac"))))
-  (setq coding-system-for-read (read my-new-coding))
-  (revert-buffer t t)
-  (setq my-current-coding-index my-next-coding-index)
-  (message "Set coding %s." my-new-coding)
+  (let (my-current-eol
+        my-next-coding-index
+        my-new-coding-system
+        my-new-coding)
+    (setq my-current-eol
+          (coding-system-eol-type buffer-file-coding-system))
+    (setq my-next-coding-index (1+ my-current-coding-index))
+    (if (equal my-next-coding-index (length my-working-codings))
+        (setq my-next-coding-index 0))
+    (setq my-new-coding-system
+          (elt my-working-codings my-next-coding-index))
+    (cond ((equal my-current-eol 0)
+           (setq my-new-coding (concat my-new-coding-system "-unix")))
+          ((equal my-current-eol 1)
+           (setq my-new-coding (concat my-new-coding-system "-dos")))
+          ((equal my-current-eol 2)
+           (setq my-new-coding (concat my-new-coding-system "-mac"))))
+    (setq coding-system-for-read (read my-new-coding))
+    (revert-buffer t t)
+    (setq my-current-coding-index my-next-coding-index)
+    (message "Set coding %s." my-new-coding)
+    )
   )
 (global-set-key [f11] 'pa23-change-coding)
 
@@ -124,15 +129,19 @@
 (defun pa23-change-eol ()
   "Change EOL for current buffer."
   (interactive)
-  (setq my-current-eol
-        (coding-system-eol-type buffer-file-coding-system))
-  (if (equal my-current-eol 2)
-      (setq my-new-eol 0)
-    (setq my-new-eol (+ my-current-eol 1)))
-  (setq my-new-coding
-        (coding-system-change-eol-conversion
-         buffer-file-coding-system my-new-eol))
-  (set-buffer-file-coding-system my-new-coding)
+  (let (my-current-eol
+        my-new-eol
+        my-new-coding)
+    (setq my-current-eol
+          (coding-system-eol-type buffer-file-coding-system))
+    (if (equal my-current-eol 2)
+        (setq my-new-eol 0)
+      (setq my-new-eol (1+ my-current-eol)))
+    (setq my-new-coding
+          (coding-system-change-eol-conversion
+           buffer-file-coding-system my-new-eol))
+    (set-buffer-file-coding-system my-new-coding)
+    )
   )
 (global-set-key [f12] 'pa23-change-eol)
 
