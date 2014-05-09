@@ -145,21 +145,6 @@
   )
 (global-set-key [f12] 'pa23-change-eol)
 
-;; insert some text before each of the n lines
-(defun pa23-insert-before (text n)
-  "Insert some text before each of the n lines."
-  (interactive "sEnter text: \nnEnter number of inserts: ")
-  (let ((i 1) colpos)
-    (setq colpos (- (point) (line-beginning-position)))
-    (while (<= i n)
-      (insert text)
-      (forward-line)
-      (beginning-of-line)
-      (forward-char colpos)
-      (setq i (1+ i)))
-    )
-  )
-
 ;; repositories
 ;; ( update package list: M-x package-refresh-contents )
 (require 'package)
