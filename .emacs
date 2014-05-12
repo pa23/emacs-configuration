@@ -34,6 +34,12 @@
 (global-hl-line-mode 1)
 (set-face-background 'highlight "#E5E5FF")
 
+;; overwrite text selection
+(delete-selection-mode 1)
+
+;; highligh expression between brackets
+;;(setq show-paren-style 'expression)
+
 ;; smooth text scrolling by arrow keys
 (setq scroll-conservatively 50)
 (setq scroll-preserve-screen-position 't)
@@ -144,6 +150,20 @@
     )
   )
 (global-set-key [f12] 'pa23-change-eol)
+
+;; copy rectangle to clipboard
+(defun copy-rectangle-to-clipboard (p1 p2)
+  "Copy region as column (rectangle) to operating system's clipboard."
+  (interactive "r")
+  (let ((x-select-enable-clipboard t))
+    (copy-rectangle-to-register ?0 p1 p2)
+    (kill-new (with-temp-buffer
+                (insert-register ?0)
+                (buffer-string))
+              )
+    )
+  )
+(global-set-key (kbd "C-x r w") 'copy-rectangle-to-clipboard)
 
 ;; repositories
 ;; ( update package list: M-x package-refresh-contents )
