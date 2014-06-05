@@ -69,6 +69,9 @@
 (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
 (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
 
+;; delete excess whitespaces in current buffer
+(global-set-key [f8] 'delete-trailing-whitespace)
+
 ;; change line wrapping for current buffer
 (setq default-truncate-lines t)
 (global-visual-line-mode 1)
