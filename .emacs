@@ -69,8 +69,8 @@
 (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
 (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
 
-;; delete excess whitespaces in current buffer
-(global-set-key [f8] 'delete-trailing-whitespace)
+;; delete excess whitespaces before saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; change line wrapping for current buffer
 (setq default-truncate-lines t)
@@ -84,13 +84,13 @@
 (setq compilation-scroll-output 1)
 
 ;; activation cmake mode
-(require 'cmake-mode)
-(setq auto-mode-alist
-	  (append
-	   '(("CMakeLists\\.txt\\'" . cmake-mode))
-	   '(("\\.cmake\\'" . cmake-mode))
-	   auto-mode-alist))
-(autoload 'cmake-mode "cmake-mode.elc" t)
+;; (require 'cmake-mode)
+;; (setq auto-mode-alist
+;; 	  (append
+;; 	   '(("CMakeLists\\.txt\\'" . cmake-mode))
+;; 	   '(("\\.cmake\\'" . cmake-mode))
+;; 	   auto-mode-alist))
+;; (autoload 'cmake-mode "cmake-mode.elc" t)
 
 ;; setup popup switcher dialog
 (require 'popup-switcher)
@@ -167,6 +167,10 @@
     )
   )
 (global-set-key (kbd "C-x r w") 'copy-rectangle-to-clipboard)
+
+;; stop creating backup~ and #autosave# files
+(setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; repositories
 ;; ( update package list: M-x package-refresh-contents )
