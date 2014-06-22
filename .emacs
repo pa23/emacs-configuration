@@ -34,6 +34,13 @@
 (global-hl-line-mode 1)
 (set-face-background 'highlight "#E5E5FF")
 
+;; copy from one dired dir to the next dired dir shown in a split window
+(setq dired-dwim-target t)
+
+;; go to file directory and place cursor on its name
+(require 'dired-x)
+(global-set-key (kbd "C-x C-j") 'dired-jump)
+
 ;; overwrite text selection
 (delete-selection-mode 1)
 
@@ -66,8 +73,8 @@
   "Scroll down 1 lines"
   (interactive)
   (scroll-down 1))
-(global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines) ;
-(global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines) ;
+(global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines)
+(global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines)
 
 ;; delete excess whitespaces before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
