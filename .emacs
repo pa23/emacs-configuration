@@ -83,14 +83,10 @@
 ;; scroll compilation log buffer
 (setq compilation-scroll-output 1)
 
-;; activation cmake mode
-;; (require 'cmake-mode)
-;; (setq auto-mode-alist
-;; 	  (append
-;; 	   '(("CMakeLists\\.txt\\'" . cmake-mode))
-;; 	   '(("\\.cmake\\'" . cmake-mode))
-;; 	   auto-mode-alist))
-;; (autoload 'cmake-mode "cmake-mode.elc" t)
+;; activation xah-elisp-mode for emacs lisp sources
+;;(require 'xah-elisp-mode)
+;;(autoload 'xah-elisp-mode "xah-elisp-mode.elc" t)
+;;(add-hook 'emacs-lisp-mode-hook 'xah-elisp-mode)
 
 ;; setup popup switcher dialog
 (require 'popup-switcher)
@@ -101,7 +97,8 @@
 (defun pa23-kill-all-buffers ()
   "Close all opened buffers."
   (interactive)
-  (mapc 'kill-buffer (buffer-list)))
+  (mapc 'kill-buffer (buffer-list))
+  )
 
 ;; change coding for current buffer
 (setq my-working-codings ["utf-8" "windows-1251" "koi8-r" "cp866"])
