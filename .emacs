@@ -18,7 +18,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 120 :width normal)))))
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
@@ -43,6 +43,11 @@
 
 ;; overwrite text selection
 (delete-selection-mode 1)
+
+;; remember the cursor position of files
+(require 'saveplace)
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
 
 ;; highligh expression between brackets
 ;;(setq show-paren-style 'expression)
@@ -86,6 +91,12 @@
 
 ;; set style for C and C++ source codes
 (setq c-default-style '((java-mode . "java") (other . "stroustrup")))
+
+;; activation matlab mode for *.m files
+(setq auto-mode-alist
+      (cons
+       '("\\.m$" . octave-mode)
+       auto-mode-alist))
 
 ;; scroll compilation log buffer
 (setq compilation-scroll-output 1)
