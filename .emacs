@@ -22,7 +22,6 @@
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
-(add-to-list 'load-path "~/.emacs.d/")
 
 ;; disable startup message
 (setq inhibit-startup-message t)
