@@ -21,7 +21,7 @@
  '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
 
 ;; default frame size
-(setq default-frame-alist '((width . 146) (height . 38)))
+;;(setq default-frame-alist '((width . 146) (height . 38)))
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
@@ -34,7 +34,7 @@
 
 ;; highlight current line
 (global-hl-line-mode 1)
-(set-face-background 'highlight "#E5E5FF")
+;;(set-face-background 'highlight "#E5E5FF")
 
 ;; copy from one dired dir to the next dired dir shown in a split window
 (setq dired-dwim-target t)
@@ -111,6 +111,7 @@
 ;; setup popup switcher dialog
 (require 'popup-switcher)
 (setq psw-in-window-center t)
+(setq psw-mark-modified-buffers t)
 (global-set-key [f2] 'psw-switch-buffer)
 
 ;; close all opened buffers with a single command
