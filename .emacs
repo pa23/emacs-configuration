@@ -172,6 +172,13 @@
   )
 (global-set-key [f12] 'pa23-change-eol)
 
+;; align highlighed by whitespace
+(defun pa23-align-whitespace (start end)
+  "Align columns by whitespace"
+  (interactive "r")
+  (align-regexp start end
+                "\\(\\s-*\\)\\s-" 1 0 t))
+
 ;; copy rectangle to clipboard
 (defun copy-rectangle-to-clipboard (p1 p2)
   "Copy region as column (rectangle) to operating system's clipboard."
@@ -185,6 +192,9 @@
     )
   )
 (global-set-key (kbd "C-x r w") 'copy-rectangle-to-clipboard)
+
+;; multiple cursor activation shortcut
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
 
 ;; stop creating backup~ and #autosave# files
 (setq make-backup-files nil)
