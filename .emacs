@@ -8,10 +8,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
+ '(package-selected-packages (quote (xterm-color popup-switcher multiple-cursors bbdb)))
  '(scroll-bar-mode (quote right))
+ '(select-enable-clipboard t)
  '(show-paren-mode t)
- '(tool-bar-mode nil)
- '(x-select-enable-clipboard t))
+ '(tool-bar-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -193,6 +194,43 @@
     )
   )
 (global-set-key (kbd "C-x r w") 'copy-rectangle-to-clipboard)
+
+;; convert selected ASCII codes separated by semicolon to string
+(defun pa23-ascii2text (start end)
+  "Convert ASCII codes to text."
+  (interactive "r")
+  (let ((text))
+    (progn
+      (setq line  (buffer-substring-no-properties start end))
+      (setq ascii (split-string line ";"))
+      (mapc
+       (lambda (code)
+         (push (string-to-number code) text)
+         )
+       ascii )
+      )
+    (delete-region start end)
+    (insert (apply 'string (reverse text)))
+    )
+  )
+
+;; convert selected text to ASCII codes separated by semicolon
+(defun pa23-text2ascii (start end)
+  "Convert text to ASCII codes."
+  (interactive "r")
+  (let ((temp) (ascii))
+    (progn
+      (setq temp (string-to-list (buffer-substring-no-properties start end)))
+      (mapc
+       (lambda (code)
+         (setq ascii (concat ascii (number-to-string code) ";"))
+         )
+       temp )
+      )
+    (delete-region start end)
+    (insert (substring ascii 0 -1))
+    )
+  )
 
 ;; multiple cursor activation shortcut
 (global-set-key (kbd "C-c m c") 'mc/edit-lines)
