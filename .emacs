@@ -48,17 +48,21 @@
 (delete-selection-mode 1)
 
 ;; remember the cursor position of files
-(require 'saveplace)
-(setq save-place-file "~/.emacs.d/saveplace")
-(setq-default save-place t)
-;; for emacs 25 (save-place-mode 1)
+;; (require 'saveplace)
+;; (setq save-place-file "~/.emacs.d/saveplace")
+;; (setq-default save-place t)
+(save-place-mode 1)
 
 ;; highligh expression between brackets
 ;;(setq show-paren-style 'expression)
 
 ;; smooth text scrolling by arrow keys
-(setq scroll-conservatively 50)
-(setq scroll-preserve-screen-position 't)
+;;(setq scroll-conservatively 50)
+;;(setq scroll-preserve-screen-position 't)
+
+;; smooth text scrolling
+(setq scroll-step 1)
+(setq scroll-margin 5)
 
 ;; disable scrolling acceleration by using mouse wheel
 (setq mouse-wheel-progressive-speed nil)
@@ -72,18 +76,19 @@
 ;; set tab width to 4 symbols
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
+(setq-default standart-indent 4)
 
 ;; set scrolling step by using mouse wheel
-(defun scroll-up-1-lines ()
-  "Scroll up 1 lines"
-  (interactive)
-  (scroll-up 1))
-(defun scroll-down-1-lines ()
-  "Scroll down 1 lines"
-  (interactive)
-  (scroll-down 1))
-(global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines)
-(global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines)
+;; (defun scroll-up-1-lines ()
+;;   "Scroll up 1 lines"
+;;   (interactive)
+;;   (scroll-up 1))
+;; (defun scroll-down-1-lines ()
+;;   "Scroll down 1 lines"
+;;   (interactive)
+;;   (scroll-down 1))
+;; (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines)
+;; (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines)
 
 ;; delete excess whitespaces before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -97,18 +102,18 @@
 (setq c-default-style '((java-mode . "java") (other . "stroustrup")))
 
 ;; activation matlab mode for *.m files
-(setq auto-mode-alist
-      (cons
-       '("\\.m$" . octave-mode)
-       auto-mode-alist))
+;; (setq auto-mode-alist
+;;       (cons
+;;        '("\\.m$" . octave-mode)
+;;        auto-mode-alist))
 
 ;; scroll compilation log buffer
 (setq compilation-scroll-output 1)
 
 ;; activation xah-elisp-mode for emacs lisp sources
-;;(require 'xah-elisp-mode)
-;;(autoload 'xah-elisp-mode "xah-elisp-mode.elc" t)
-;;(add-hook 'emacs-lisp-mode-hook 'xah-elisp-mode)
+;; (require 'xah-elisp-mode)
+;; (autoload 'xah-elisp-mode "xah-elisp-mode.elc" t)
+;; (add-hook 'emacs-lisp-mode-hook 'xah-elisp-mode)
 
 ;; setup popup switcher dialog
 (require 'popup-switcher)
@@ -120,11 +125,10 @@
 (defun pa23-kill-all-buffers ()
   "Close all opened buffers."
   (interactive)
-  (mapc 'kill-buffer (buffer-list))
-  )
+  (mapc 'kill-buffer (buffer-list)) )
 
 ;; change coding for current buffer
-(setq my-working-codings ["utf-8" "windows-1251" "koi8-r" "cp866"])
+(setq my-working-codings ["utf-8" "windows-1251" "koi8-r" "cp866" "utf-16le"])
 (setq my-current-coding-index -1)
 (defun pa23-change-coding ()
   "Change coding for current buffer."
@@ -149,9 +153,7 @@
     (setq coding-system-for-read (read my-new-coding))
     (revert-buffer t t)
     (setq my-current-coding-index my-next-coding-index)
-    (message "Set coding %s." my-new-coding)
-    )
-  )
+    (message "Set coding %s." my-new-coding) ) )
 (global-set-key [f11] 'pa23-change-coding)
 
 ;; change eol for current buffer
@@ -169,9 +171,7 @@
     (setq my-new-coding
           (coding-system-change-eol-conversion
            buffer-file-coding-system my-new-eol))
-    (set-buffer-file-coding-system my-new-coding)
-    )
-  )
+    (set-buffer-file-coding-system my-new-coding) ) )
 (global-set-key [f12] 'pa23-change-eol)
 
 ;; align highlighed by whitespace
@@ -189,10 +189,7 @@
     (copy-rectangle-to-register ?0 p1 p2)
     (kill-new (with-temp-buffer
                 (insert-register ?0)
-                (buffer-string))
-              )
-    )
-  )
+                (buffer-string)) ) ) )
 (global-set-key (kbd "C-x r w") 'copy-rectangle-to-clipboard)
 
 ;; convert selected ASCII codes separated by semicolon to string
@@ -204,15 +201,10 @@
       (setq line  (buffer-substring-no-properties start end))
       (setq ascii (split-string line ";"))
       (mapc
-       (lambda (code)
-         (push (string-to-number code) text)
-         )
-       ascii )
-      )
+       (lambda (code) (push (string-to-number code) text) )
+       ascii) )
     (delete-region start end)
-    (insert (apply 'string (reverse text)))
-    )
-  )
+    (insert (apply 'string (reverse text))) ) )
 
 ;; convert selected text to ASCII codes separated by semicolon
 (defun pa23-text2ascii (start end)
@@ -222,15 +214,23 @@
     (progn
       (setq temp (string-to-list (buffer-substring-no-properties start end)))
       (mapc
-       (lambda (code)
-         (setq ascii (concat ascii (number-to-string code) ";"))
-         )
-       temp )
-      )
+       (lambda (code) (setq ascii (concat ascii (number-to-string code) ";")) )
+       temp) )
     (delete-region start end)
-    (insert (substring ascii 0 -1))
-    )
-  )
+    (insert (substring ascii 0 -1)) ) )
+
+;; convert decimal to binary
+(defun pa23-dec2bin (start end)
+  "Convert decimal to binary."
+  (interactive "r")
+  (let ((var 0) (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end)))
+    (while (not (= var 0))
+      (setq res (concat (if (= 1 (logand var 1)) "1" "0") res))
+      (setq var (lsh var -1)) )
+    (if (string= res "") (setq res "0"))
+    (delete-region start end)
+    (insert res) ) )
 
 ;; multiple cursor activation shortcut
 (global-set-key (kbd "C-c m c") 'mc/edit-lines)
@@ -272,3 +272,17 @@
     (when input-method
       (activate-input-method current))))
 (cfg:reverse-input-method 'russian-computer)
+
+;; CEDET settings
+;; (require 'cedet)
+;; (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-completions-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)
+;; (semantic-mode   t)
+;; (global-ede-mode t)
+;; (require 'ede/generic)
+;; (require 'semantic/ia)
+;; (ede-enable-generic-projects)
