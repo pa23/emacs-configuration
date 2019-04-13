@@ -8,7 +8,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(package-selected-packages (quote (xterm-color popup-switcher multiple-cursors bbdb)))
+ '(package-selected-packages
+   (quote
+    (popup popup-switcher cl-lib xterm-color multiple-cursors bbdb)))
  '(scroll-bar-mode (quote right))
  '(select-enable-clipboard t)
  '(show-paren-mode t)
@@ -26,6 +28,15 @@
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
+
+;; repositories
+;; ( update package list: M-x package-refresh-contents )
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
 
 ;; disable startup message
 (setq inhibit-startup-message t)
@@ -117,7 +128,8 @@
 
 ;; setup popup switcher dialog
 (require 'popup-switcher)
-(setq psw-in-window-center t)
+;;(setq psw-in-window-center t)
+(setq psw-popup-position 'center)
 (setq psw-mark-modified-buffers t)
 (global-set-key [f2] 'psw-switch-buffer)
 
@@ -238,15 +250,6 @@
 ;; stop creating backup~ and #autosave# files
 (setq make-backup-files nil)
 (setq auto-save-default nil)
-
-;; repositories
-;; ( update package list: M-x package-refresh-contents )
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
 
 ;; using hotkeys in russian keyboard layout
 (defun cfg:reverse-input-method (input-method)
