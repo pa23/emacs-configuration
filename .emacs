@@ -10,21 +10,19 @@
  '(column-number-mode t)
  '(package-selected-packages
    (quote
-    (popup popup-switcher cl-lib xterm-color multiple-cursors bbdb)))
+    ;(popup popup-switcher cl-lib xterm-color multiple-cursors bbdb)))
+    (xterm-color multiple-cursors)))
  '(scroll-bar-mode (quote right))
  '(select-enable-clipboard t)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 113 :width normal)))))
+;; fonts
+(set-frame-font "DejaVu Sans Mono 10")
+;(setq default-frame-alist '((font . "DejaVu Sans Mono-10")))
 
 ;; default frame size
-;;(setq default-frame-alist '((width . 146) (height . 38)))
+(setq default-frame-alist '((width . 80) (height . 25)))
 
 ;; directory for additional modules
 (add-to-list 'load-path "~/.site-lisp")
@@ -32,10 +30,10 @@
 ;; repositories
 ;; ( update package list: M-x package-refresh-contents )
 (require 'package)
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (package-initialize)
 
 ;; disable startup message
@@ -45,8 +43,10 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; highlight current line
-(global-hl-line-mode 1)
-;;(set-face-background 'highlight "#E5E5FF")
+;;(global-hl-line-mode 1)
+
+;; highligh expression between brackets
+;;(setq show-paren-style 'expression)
 
 ;; copy from one dired dir to the next dired dir shown in a split window
 (setq dired-dwim-target t)
@@ -59,17 +59,7 @@
 (delete-selection-mode 1)
 
 ;; remember the cursor position of files
-;; (require 'saveplace)
-;; (setq save-place-file "~/.emacs.d/saveplace")
-;; (setq-default save-place t)
 (save-place-mode 1)
-
-;; highligh expression between brackets
-;;(setq show-paren-style 'expression)
-
-;; smooth text scrolling by arrow keys
-;;(setq scroll-conservatively 50)
-;;(setq scroll-preserve-screen-position 't)
 
 ;; smooth text scrolling
 (setq scroll-step 1)
@@ -88,18 +78,7 @@
 (setq-default tab-width 4)
 (setq-default c-basic-offset 4)
 (setq-default standart-indent 4)
-
-;; set scrolling step by using mouse wheel
-;; (defun scroll-up-1-lines ()
-;;   "Scroll up 1 lines"
-;;   (interactive)
-;;   (scroll-up 1))
-;; (defun scroll-down-1-lines ()
-;;   "Scroll down 1 lines"
-;;   (interactive)
-;;   (scroll-down 1))
-;; (global-set-key (kbd "<mouse-4>") 'scroll-down-1-lines)
-;; (global-set-key (kbd "<mouse-5>") 'scroll-up-1-lines)
+(global-set-key (kbd "RET") 'newline-and-indent)
 
 ;; delete excess whitespaces before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -127,11 +106,11 @@
 ;; (add-hook 'emacs-lisp-mode-hook 'xah-elisp-mode)
 
 ;; setup popup switcher dialog
-(require 'popup-switcher)
+;(require 'popup-switcher)
 ;;(setq psw-in-window-center t)
-(setq psw-popup-position 'center)
-(setq psw-mark-modified-buffers t)
-(global-set-key [f2] 'psw-switch-buffer)
+;(setq psw-popup-position 'center)
+;(setq psw-mark-modified-buffers t)
+;(global-set-key [f2] 'psw-switch-buffer)
 
 ;; close all opened buffers with a single command
 (defun pa23-kill-all-buffers ()
@@ -241,6 +220,59 @@
       (setq res (concat (if (= 1 (logand var 1)) "1" "0") res))
       (setq var (lsh var -1)) )
     (if (string= res "") (setq res "0"))
+    (delete-region start end)
+    (insert res) ) )
+
+;; convert decimal to hexadecimal
+(defun pa23-dec2hex (start end)
+  "Convert decimal to hexadecimal."
+  (interactive "r")
+  (let ((var 0) (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end)))
+    (setq res (upcase (format "%x" var)))
+    (delete-region start end)
+    (insert res) ) )
+
+;; convert hexadecimal to binary
+(defun pa23-hex2bin (start end)
+  "Convert hexadecimal to binary."
+  (interactive "r")
+  (let ((var "") (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end) 16))
+    (while (not (= var 0))
+      (setq res (concat (if (= 1 (logand var 1)) "1" "0") res))
+      (setq var (lsh var -1)) )
+    (if (string= res "") (setq res "0"))
+    (delete-region start end)
+    (insert res) ) )
+
+;; convert hexadecimal to decimal
+(defun pa23-hex2dec (start end)
+  "Convert hexadecimal to decimal."
+  (interactive "r")
+  (let ((var 0) (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end) 16))
+    (setq res (number-to-string var))
+    (delete-region start end)
+    (insert res) ) )
+
+;; convert binary to decimal
+(defun pa23-bin2dec (start end)
+  "Convert binary to decimal."
+  (interactive "r")
+  (let ((var 0) (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end) 2))
+    (setq res (number-to-string var))
+    (delete-region start end)
+    (insert res) ) )
+
+;; convert binary to hexadecimal
+(defun pa23-bin2hex (start end)
+  "Convert binary to hexadecimal."
+  (interactive "r")
+  (let ((var 0) (res ""))
+    (setq var (string-to-number (buffer-substring-no-properties start end) 2))
+    (setq res (upcase (format "%x" var)))
     (delete-region start end)
     (insert res) ) )
 
