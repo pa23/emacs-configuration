@@ -7,18 +7,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(column-number-mode t)
- '(package-selected-packages
-   (quote
-    ;(popup popup-switcher cl-lib xterm-color multiple-cursors bbdb)))
-    (xterm-color multiple-cursors)))
- '(scroll-bar-mode (quote right))
+ '(custom-enabled-themes '(dichromacy))
+ '(package-selected-packages '(undo-tree xterm-color multiple-cursors))
+ '(scroll-bar-mode 'right)
  '(select-enable-clipboard t)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
 ;; fonts
-(set-frame-font "DejaVu Sans Mono 10")
+;(set-frame-font "DejaVu Sans Mono 10")
 ;(setq default-frame-alist '((font . "DejaVu Sans Mono-10")))
 
 ;; default frame size
@@ -43,7 +43,15 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; highlight current line
-;;(global-hl-line-mode 1)
+(global-hl-line-mode 1)
+
+;; turn on undo-tree
+(global-undo-tree-mode 1)
+;; make ctrl-z undo
+(global-set-key (kbd "C-z") 'undo)
+;; make ctrl-Z redo
+(defalias 'redo 'undo-tree-redo)
+(global-set-key (kbd "C-S-z") 'redo)
 
 ;; highligh expression between brackets
 ;;(setq show-paren-style 'expression)
@@ -82,6 +90,9 @@
 
 ;; delete excess whitespaces before saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; week first day for calendar
+(setq calendar-week-start-day 1)
 
 ;; change line wrapping for current buffer
 (setq default-truncate-lines t)
@@ -321,3 +332,10 @@
 ;; (require 'ede/generic)
 ;; (require 'semantic/ia)
 ;; (ede-enable-generic-projects)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 99 :width normal)))))
